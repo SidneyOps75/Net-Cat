@@ -21,14 +21,23 @@ var (
 	messages      []string                    // Chat history
 	mu            sync.Mutex                  // Mutex to protect access to shared resources
 	clientCounter int                         // Count of active clients
+	logo          string
 )
+
+func loadLogo(filename string) string {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		log.Fatalf("Error loading logo: %s", err)
+	}
+	return string(data)
+}
 
 // Function to handle individual client connections
 func handleClient(conn net.Conn) {
 	defer conn.Close()
 
 	// Request client's name
-	conn.Write([]byte("Enter your name: "))
+	conn.Write([]byte(logo))
 	reader := bufio.NewReader(conn)
 	name, _ := reader.ReadString('\n')
 	name = strings.TrimSpace(name)
@@ -66,8 +75,7 @@ func handleClient(conn net.Conn) {
 		}
 
 		// Format message with timestamp
-		formattedMessage := fmt.Sprintf("[%s][%s]: %s",
-			time.Now().Format("2006-01-02 15:04:05"), name, message)
+		formattedMessage := fmt.Sprintf("[%s][%s]: %s", time.Now().Format("2006-01-02 15:04:05"), name, message)
 
 		// Store the message in chat history
 		mu.Lock()
@@ -101,6 +109,10 @@ func broadcast(message string, sender net.Conn) {
 }
 
 func main() {
+	// Load logo from file
+	logo = loadLogo("logo.txt")
+
+	// Start server
 	port := defaultPort
 	if len(os.Args) > 1 {
 		port = os.Args[1]
