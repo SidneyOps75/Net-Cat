@@ -23,13 +23,13 @@ This project is a simple TCP chat server implementation in Go. It allows multipl
 Clone this repository:
 
  ```bash
-    git clone https://learn.zone01kisumu.ke/git/bshisia/net-cat.git
+    git clone https://github.com/SidneyOps75/Net-Cat.git
 ```
 
 Navigate to the project directory:
 
 ```bash
-    cd net-cat
+    cd Net-Cat
 ```
 
 ## Usage
